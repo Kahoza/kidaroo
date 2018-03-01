@@ -5,20 +5,23 @@ class ActivitiesController < ApplicationController
     @activities = Activity.all
     @activities = @activities.where(category: params[:category]) unless params[:category].blank?
     @activities = @activities.where(age_group: params[:age_group]) unless params[:age_group].blank?
-    # @activities = @activities.where("title ILIKE ?", "%#{params[:title]}%") unless params[:title].blank?
-    titles = params[:title].split(' ')
-    @activities = @activities.where((["title ILIKE ?"] * titles.size).join(' OR '), *titles.map { |title| "%#{title}%" }) unless params[:title].blank?
-    addr = params[:address].split(' ')
-    @activities = @activities.where((["address ILIKE ?"] * addr.size).join(' OR '), *addr.map { |address| "%#{address}%" }) unless params[:address].blank?
-    @activities = @activities.where.not(latitude: nil, longitude: nil)
+    titles = params[:title].split(' ') unless params[:title].blank?
+    @activities = @activities.where((["title ILIKE ?"] * titles.size).join(' OR '), *titles.map { |title| "%#{title}%" }) unless titles.blank?
+    addr = params[:address].split(' ') unless params[:address].blank?
+    @activities = @activities.where((["address ILIKE ?"] * addr.size).join(' OR '), *addr.map { |address| "%#{address}%" }) unless addr.blank?
+    @activities = @activities.where.not(latitude: nil, longitude: nil) unless params[:address].blank?
     @markers = @activities.map do |activity|
+      next if activity.latitude.nil?
       {
         lat: activity.latitude,
         lng: activity.longitude#,
         # infoWindow: { content: render_to_string(partial: "/activities/map_box", locals: { activity: activity }) }
       }
     end
-end
+    @markers = @markers.compact
+    p @markers
+
+  end
 
   def new
     @activity = Activity.new
