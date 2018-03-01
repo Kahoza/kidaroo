@@ -13,7 +13,6 @@
 			<%= cl_image_tag @activity.photos.first.path %>
 		</div>
 	</div>
-
 	<div class="activity-events">
 		<div class="activity-events-header">
 			<div class="activity-events-header-date">
@@ -41,18 +40,27 @@
 		<% end %>
 	</div>
 
-	<div class="activity-provider-event">
-		<div class="activity-provider-name">
-			<h2><%= @activity.user.first_name %></h2>
+	<div class="activity-event-provider">
+		<div class="activity-event-provider-info">
+			<div class="activity-event-provider-name">
+				<h3>Name of the provider</h3>
+				<h2><%= @activity.user.first_name %></h2>
+			</div>
+			<hr>
+			<div class="activity-event-provider-address">
+				<h3>Address</h3>
+				<address><%= @activity.user.address %></address>
+			</div>
 		</div>
-		<div class="activity-provider-address">
-			<address><%= @activity.user.address %></address>
-		</div>
-		<div class="activity-event-map">
-			<p>Awesome map appears here</p>
-		</div>
+
+			<div
+	id="map"
+	data-markers="<%= @markers.to_json %>"
+	></div>
+
 	</div>
-	<div class="activity-review">
+
+	<div class="activity-event-provider-review">
 		<p>Be the first one to leave a review</p>
 	</div>
 </div>
